@@ -44,6 +44,7 @@ async function fetchMarkdown(url, reporter, fetchWaitMs = 500, fetchFunction = f
       reporter.log('load', 'error', 'Failed to fetch markdown.', url, response.status, response.statusText);
       return '';
     }
+
     const text = await response.text();
     signal.clear();
     return text;
@@ -200,6 +201,10 @@ export async function saveDocument(document, config) {
   const { reporter, outputDir } = config;
   if (!outputDir) {
     reporter.log('save', 'error', 'No output directory specified. Skipping save.');
+    return;
+  }
+  if (!mdast) {
+    reporter.log('save', 'error', 'No mdast. Skipping save.');
     return;
   }
   const documentPath = entryToPath(entry);
